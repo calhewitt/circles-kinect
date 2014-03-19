@@ -1,4 +1,3 @@
-circles-kinect
-==============
+# Circles for Kinect
 
-circles-kinect
+A piece of Windows software for easily interacting with the Kinect, and setting up trigger regions in real space to start actions on your computer.

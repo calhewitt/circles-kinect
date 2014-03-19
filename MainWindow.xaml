@@ -1,0 +1,50 @@
+﻿<Window x:Class="Circles.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterScreen"
+        ClipToBounds="False"
+        BorderThickness="5"
+        AllowsTransparency="True"
+        KeyDown="window_keypress"
+        Title="Circles" Height="600" Width="800" MouseMove="window_MouseMove" ResizeMode="NoResize" WindowStyle="none" Icon="{DynamicResource ImageSource1}">
+    <Window.Resources>
+
+        <BitmapImage x:Key="ImageSource1" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="H:\Other stuff\Circles\Circles\circlesicon.ico"/>
+
+    </Window.Resources>
+    <Grid Name="OuterContainer">
+
+        <Grid.Effect>
+            <DropShadowEffect BlurRadius="8" Direction="0" RenderingBias="Quality" ShadowDepth="0" Color="#888888"/>
+        </Grid.Effect>
+        <Grid Name="InnerContainer" ClipToBounds="True">
+            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#ffffff" ClipToBounds="True" Grid.RowSpan="2">
+
+            </Grid>
+            <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="68" Margin="292,71,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
+            <Grid Name="SelectionPanel" HorizontalAlignment="Left" Height="550" Margin="0,40,0,0" VerticalAlignment="Top" Width="260" Background="#333333" Grid.RowSpan="2">
+                <Label Name="SelectionName" Content="Selected" HorizontalAlignment="Left" VerticalAlignment="Top" Width="146" FontSize="32" Margin="4,4,0,0" FontFamily="Segoe UI Light" Foreground="#ffffff"/>
+                <Slider Name ="SelectionSize" HorizontalAlignment="Left" Margin="76,63,0,0" VerticalAlignment="Top" Height="20" Width="150" ValueChanged="SelectionSize_ValueChanged"/>
+                <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Visibility="Visible" Margin="10,123,34,403" />
+                <Label Content="Size" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
+                <Label Content="Action" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
+
+            </Grid>
+            <Grid Name="TopBar" Margin="0,0,0,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="#dddddd" MouseDown="TopBar_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="13*"/>
+                    <ColumnDefinition Width="777*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="New Circle" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555" Background="Transparent" HorizontalAlignment="Left" Margin="683,52,0,-36" VerticalAlignment="Top" Width="75" MouseDown="newcircle_click" Grid.Column="1" FontSize="16" Padding="0,-12,0,0" Height="24"/>
+                <Label Content="Circles" HorizontalAlignment="Left" Margin="6,-7,0,0" VerticalAlignment="Top" FontSize="30" FontFamily="Segoe UI Light" Grid.ColumnSpan="2"/>
+                <Label Content="x" Foreground="#555555" HorizontalAlignment="Left" Margin="749,2,0,0" VerticalAlignment="Top" Width="17" BorderThickness="0" FontSize="20" FontWeight="Bold" FontFamily="Segoe UI" Padding="0,-8,0,0" Height="32" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" MouseLeftButtonDown="closeButton_click" Grid.Column="1"/>
+                <Label Name="Toggletracking" Content="Start" HorizontalAlignment="Left" Margin="87,7,0,0" VerticalAlignment="Top" Width="39" MouseDown="toggle_tracking" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Name="Save" Content="Save" HorizontalAlignment="Left" Margin="133,7,0,0" VerticalAlignment="Top" Width="38" MouseDown="save_to_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Name="SaveAs" Content="Save As" HorizontalAlignment="Left" Margin="177,7,0,0" VerticalAlignment="Top" Width="58" MouseDown="save_as" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Name="Open" Content="Open File" HorizontalAlignment="Left" Margin="241,7,0,0" VerticalAlignment="Top" Width="71" MouseDown="open_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+
+            </Grid>
+        </Grid>
+    </Grid>
+
+</Window>

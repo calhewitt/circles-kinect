@@ -45,9 +45,11 @@ namespace Circles
         //Kinect Stuff
         Boolean tracking;
         public String newstate;
+        public String newlstate;
         public String coordinates = "hello";
         public String baseHTML = "";
         public String state;
+        public String lstate;
         public int freq;
         public string sampledir = "D:\\Documents\\Development\\kinect music\\samples\\";
         public Boolean panelVisible;
@@ -81,6 +83,7 @@ namespace Circles
             destroy_selection();
             tracking = true;
             Indicator.Visibility = Visibility.Visible;
+            lIndicator.Visibility = Visibility.Visible;
             Toggletracking.Content = "Stop";
 
             image1.Visibility = Visibility.Visible;
@@ -102,6 +105,7 @@ namespace Circles
         {
             tracking = false;
             Indicator.Visibility = Visibility.Hidden;
+            lIndicator.Visibility = Visibility.Hidden;
             Toggletracking.Content = "Start";
             image1.Visibility = Visibility.Hidden;
         }
@@ -253,9 +257,9 @@ namespace Circles
         }
 
         //Algorithmto check whether an indicator is inside a circle
-        public Boolean inCircle(Ellipse circle)
+        public Boolean inCircle(Ellipse circle, Ellipse indicator)
         {
-            Point totest = new Point(Indicator.Margin.Left + 34, Indicator.Margin.Top + 34);
+            Point totest = new Point(indicator.Margin.Left + 34, indicator.Margin.Top + 34);
             Point circleCenter = new Point(circle.Margin.Left + (circle.Width / 2), circle.Margin.Top + (circle.Width / 2));
             double a = Math.Abs(totest.X - circleCenter.X);
             double b = Math.Abs(totest.Y - circleCenter.Y);
@@ -270,13 +274,18 @@ namespace Circles
             if (tracking)
             {
                 Indicator.Margin = new Thickness(rx, ry, 0, 0);
+                lIndicator.Margin = new Thickness(lx, ly, 0, 0);
                 newstate = null;
+                newlstate = null;
                 foreach (FrameworkElement child in Circles.Children)
                 {
                     Ellipse circle = (Ellipse)child;
-                    if (inCircle(circle))
+                    if (inCircle(circle, Indicator))
                     {
                         newstate = circles[circle];
+                    }
+                    if (inCircle(circle, lIndicator)) {
+                        newlstate = circles[circle];
                     }
 
                 }
@@ -306,6 +315,34 @@ namespace Circles
                     }
                 }
                 state = newstate;
+                
+                //And the same for the left hand...
+                if (lstate != newlstate)
+                {
+         
+                    //A new state has been reached, so an action needs to be triggered
+                    if (newlstate != null)
+                    {
+                        executeCommand(newlstate);
+                    }
+
+                    //If original state is midi, release note  
+                    if (lstate != null)
+                    {
+                        String action = lstate.Split(':')[0].ToLower();
+                        String data = lstate.Split(new char[] { ':' }, 2)[1];
+                        if (action == "midi")
+                        {
+                            //MessageBox.Show("midi off");
+                            String[] midiparams = data.Split(',');
+                            if (midiparams[3] == "true")
+                            {
+                                sendMidiOff(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), 0);
+                            }
+                        }
+                    }
+                }
+                lstate = newlstate;
             }
         }
 
@@ -628,11 +665,12 @@ namespace Circles
                     {
 
                         Joint HandRight = skeleton.Joints[JointType.HandRight].ScaleTo(800, 600, .65f, .5f);
+                        Joint HandLeft = skeleton.Joints[JointType.HandLeft].ScaleTo(800, 600, .65f, .5f);
                         SkeletonPoint rxyz = HandRight.Position;
                         double rx = (double)rxyz.X;
                         double ry = (double)rxyz.Y;
 
-                        SkeletonPoint lxyz = HandRight.Position;
+                        SkeletonPoint lxyz = HandLeft.Position;
                         double lx = (double)lxyz.X;
                         double ly = (double)lxyz.Y;
 

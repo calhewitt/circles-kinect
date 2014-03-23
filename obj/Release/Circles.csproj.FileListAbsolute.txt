@@ -16,3 +16,5 @@ D:\Documents\Visual Studio 2013\Projects\Circles\Circles\obj\Release\Circles.csp
 D:\Documents\Visual Studio 2013\Projects\Circles\Circles\obj\Release\Circles.exe
 D:\Documents\Visual Studio 2013\Projects\Circles\Circles\obj\Release\Circles.pdb
 D:\Documents\Visual Studio 2013\Projects\Circles\Circles\obj\Release\Circles.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2013\Projects\Circles\Circles\bin\Release\Midi.dll
+D:\Documents\Visual Studio 2013\Projects\Circles\Circles\bin\Release\Midi.xml

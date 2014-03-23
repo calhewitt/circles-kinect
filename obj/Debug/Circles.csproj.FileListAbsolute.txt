@@ -18,23 +18,3 @@ D:\Documents\Visual Studio 2013\Projects\Circles\Circles\bin\Debug\InputSimulato
 D:\Documents\Visual Studio 2013\Projects\Circles\Circles\bin\Debug\InputSimulator.xml
 D:\Documents\Visual Studio 2013\Projects\Circles\Circles\bin\Debug\Midi.dll
 D:\Documents\Visual Studio 2013\Projects\Circles\Circles\bin\Debug\Midi.xml
-H:\Other stuff\Circles\Circles\bin\Debug\Circles.exe.config
-H:\Other stuff\Circles\Circles\obj\Debug\Circles.exe
-H:\Other stuff\Circles\Circles\obj\Debug\Circles.pdb
-H:\Other stuff\Circles\Circles\bin\Debug\Circles.exe
-H:\Other stuff\Circles\Circles\bin\Debug\Circles.pdb
-H:\Other stuff\Circles\Circles\bin\Debug\Coding4Fun.Kinect.Wpf.dll
-H:\Other stuff\Circles\Circles\bin\Debug\InputSimulator.dll
-H:\Other stuff\Circles\Circles\bin\Debug\Midi.dll
-H:\Other stuff\Circles\Circles\bin\Debug\Microsoft.Expression.Drawing.dll
-H:\Other stuff\Circles\Circles\bin\Debug\InputSimulator.pdb
-H:\Other stuff\Circles\Circles\bin\Debug\InputSimulator.xml
-H:\Other stuff\Circles\Circles\bin\Debug\Midi.xml
-H:\Other stuff\Circles\Circles\obj\Debug\Circles.csprojResolveAssemblyReference.cache
-H:\Other stuff\Circles\Circles\obj\Debug\MainWindow.baml
-H:\Other stuff\Circles\Circles\obj\Debug\MainWindow.g.cs
-H:\Other stuff\Circles\Circles\obj\Debug\App.g.cs
-H:\Other stuff\Circles\Circles\obj\Debug\Circles_MarkupCompile.cache
-H:\Other stuff\Circles\Circles\obj\Debug\Circles.g.resources
-H:\Other stuff\Circles\Circles\obj\Debug\Circles.Properties.Resources.resources
-H:\Other stuff\Circles\Circles\obj\Debug\Circles.csproj.GenerateResource.Cache

@@ -51,6 +51,7 @@ namespace Circles
         public int freq;
         public string sampledir = "D:\\Documents\\Development\\kinect music\\samples\\";
         public Boolean panelVisible;
+        Boolean started = false;
 
         string filename = null;
 
@@ -81,10 +82,15 @@ namespace Circles
             tracking = true;
             Indicator.Visibility = Visibility.Visible;
             Toggletracking.Content = "Stop";
+
+            image1.Visibility = Visibility.Visible;
             //If a kinect is available, start using it
             if (KinectSensor.KinectSensors.Count != 0)
             {
-                startKinect();
+                if (started == false)
+                {
+                    startKinect();
+                }
             }
             else
             {
@@ -97,6 +103,7 @@ namespace Circles
             tracking = false;
             Indicator.Visibility = Visibility.Hidden;
             Toggletracking.Content = "Start";
+            image1.Visibility = Visibility.Hidden;
         }
         private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -503,6 +510,7 @@ namespace Circles
 
         public void loadXML(string xml)
         {
+            xml = xml.Replace("&", "&amp;");
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
 
@@ -512,7 +520,7 @@ namespace Circles
                 double locx = Int32.Parse(xmlDoc.SelectSingleNode("circles/circle[" + (i + 1).ToString() + "]/@locx").InnerText);
                 double locy = Int32.Parse(xmlDoc.SelectSingleNode("circles/circle[" + (i + 1).ToString() + "]/@locy").InnerText);
                 string color = xmlDoc.SelectSingleNode("circles/circle[" + (i + 1).ToString() + "]/@color").InnerText;
-                string action = xmlDoc.SelectSingleNode("circles/circle[" + (i + 1).ToString() + "]/@action").InnerText;
+                string action = xmlDoc.SelectSingleNode("circles/circle[" + (i + 1).ToString() + "]/@action").InnerText.Replace("&amp;", "&");
 
                 //Create a new circle on the canvas with the right dimensions etc
                 Ellipse circle = new Ellipse();
@@ -576,15 +584,17 @@ namespace Circles
 
         void startKinect()
         {
+            started = true;
             kinect = KinectSensor.KinectSensors.FirstOrDefault(s => s.Status == KinectStatus.Connected);
             kinect.SkeletonStream.Enable();
+            kinect.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
 
             skeletonData = new Skeleton[kinect.SkeletonStream.FrameSkeletonArrayLength];
 
             kinect.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(kinect_SkeletonFrameReady);
+            kinect.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(kinect_ColorFrameReady);
 
             kinect.Start();
-            
         }
 
         private void kinect_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
@@ -599,6 +609,12 @@ namespace Circles
             getKinectData();
         }
 
+        private void kinect_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            ColorImageFrame imageData = e.OpenColorImageFrame();
+            image1.Source = imageData.ToBitmapSource();
+        }
+
 
         //Process recieved data and retrieve details for right hand
 
@@ -606,22 +622,29 @@ namespace Circles
         {
             foreach (Skeleton skeleton in this.skeletonData)
             {
-                if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
+                try
                 {
+                    if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
+                    {
 
-                    Joint HandRight = skeleton.Joints[JointType.HandRight].ScaleTo(800, 600, .3f, .3f);
-                    SkeletonPoint rxyz = HandRight.Position;
-                    double rx = (double)rxyz.X;
-                    double ry = (double)rxyz.Y;
+                        Joint HandRight = skeleton.Joints[JointType.HandRight].ScaleTo(800, 600, .65f, .5f);
+                        SkeletonPoint rxyz = HandRight.Position;
+                        double rx = (double)rxyz.X;
+                        double ry = (double)rxyz.Y;
 
-                    SkeletonPoint lxyz = HandRight.Position;
-                    double lx = (double)lxyz.X;
-                    double ly = (double)lxyz.Y;
+                        SkeletonPoint lxyz = HandRight.Position;
+                        double lx = (double)lxyz.X;
+                        double ly = (double)lxyz.Y;
 
-                    gotCoordinates(rx, ry, lx, ly);
+                        gotCoordinates(rx, ry, lx, ly);
 
+                    }
+                    else if (skeleton.TrackingState == SkeletonTrackingState.PositionOnly) { }
                 }
-                else if (skeleton.TrackingState == SkeletonTrackingState.PositionOnly) { }
+                catch
+                {
+                    //Error...
+                }
             }
         }
         public void debugMode()

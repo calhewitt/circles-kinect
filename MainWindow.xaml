@@ -9,7 +9,7 @@
         Title="Circles" Height="600" Width="800" MouseMove="window_MouseMove" ResizeMode="NoResize" WindowStyle="none" Icon="{DynamicResource ImageSource1}">
     <Window.Resources>
 
-        <BitmapImage x:Key="ImageSource1" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="H:\Other stuff\Circles\Circles\circlesicon.ico"/>
+        <BitmapImage x:Key="ImageSource1" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="D:\Documents\Visual Studio 2013\Projects\Circles\Circles\circlesicon.ico"/>
 
     </Window.Resources>
     <Grid Name="OuterContainer">
@@ -17,8 +17,11 @@
         <Grid.Effect>
             <DropShadowEffect BlurRadius="8" Direction="0" RenderingBias="Quality" ShadowDepth="0" Color="#888888"/>
         </Grid.Effect>
-        <Grid Name="InnerContainer" ClipToBounds="True">
-            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#ffffff" ClipToBounds="True" Grid.RowSpan="2">
+        <Grid Name="InnerContainer" ClipToBounds="True" Background="#ffffff">
+            <Image Height="600" HorizontalAlignment="Left" Margin="0,0,0,0" Name="image1" Stretch="Uniform" VerticalAlignment="Top" Width="800" />
+
+            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True" Grid.RowSpan="2">
+
 
             </Grid>
             <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="68" Margin="292,71,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>

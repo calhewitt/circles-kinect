@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using WindowsInput;
 using System.Net;
 using System.Windows.Media.Animation;
+using System.Speech.Synthesis;
 using System.ComponentModel;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
@@ -86,7 +87,7 @@ namespace Circles
             lIndicator.Visibility = Visibility.Visible;
             Toggletracking.Content = "Stop";
 
-            image1.Visibility = Visibility.Visible;
+            //image1.Visibility = Visibility.Visible;
             //If a kinect is available, start using it
             if (KinectSensor.KinectSensors.Count != 0)
             {
@@ -228,6 +229,13 @@ namespace Circles
                 panelVisible = false;
             }
         }
+        private void test_actions(object sender, RoutedEventArgs e)
+        {
+            foreach (string command in circles[selected].Split(';'))
+            {
+                executeCommand(command);
+            }   
+        }
         private void window_MouseMove(object sender, MouseEventArgs e)
         {
             if (down != null)
@@ -295,7 +303,10 @@ namespace Circles
                     //A new state has been reached, so an action needs to be triggered
                     if (newstate != null)
                     {
-                        executeCommand(newstate);
+                        foreach (string command in newstate.Split(';'))
+                        {
+                            executeCommand(command);
+                        }                        
                     }
 
                     //If original state is midi, release note  
@@ -401,7 +412,7 @@ namespace Circles
                         else if (action == "midi")
                         {
                             String[] midiparams = data.Split(',');
-                            sendMidi(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), Convert.ToInt32(midiparams[2]));
+                            sendMidi(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), Convert.ToInt32(midiparams[2]), Convert.ToInt32(midiparams[4]));
                         }
                         else if (action == "keypress")
                         {
@@ -449,9 +460,14 @@ namespace Circles
                         {
                             new StreamReader(WebRequest.Create(data).GetResponse().GetResponseStream()).ReadToEnd();
                         }
-                        else if (action == "execute")
+                        else if (action == "say")
                         {
-                            System.Diagnostics.Process.Start("CMD.exe", "/C" + data);
+                            SpeechSynthesizer ss = new SpeechSynthesizer();
+                            ss.Speak(data);
+                        }
+                        else if (action == "run")
+                        {
+                            System.Diagnostics.Process.Start(data);
                         }
                     });
                     bw.RunWorkerAsync();
@@ -460,14 +476,20 @@ namespace Circles
         }
 
         //Function to play midi to output device
-        public void sendMidi(int octave, int degreeOfScale, int velocity)
+        public void sendMidi(int octave, int degreeOfScale, int velocity, int device)
         {
-            int note = ((octave + 2) * 12) + degreeOfScale;
-            OutputDevice outputDevice = OutputDevice.InstalledDevices[1];
-            outputDevice.Open();
-            outputDevice.SendNoteOn(Channel.Channel1, (Note)note, velocity);
-            //outputDevice.SendNoteOff(Channel.Channel1, (Note)note, 0);
-            outputDevice.Close();
+            int note = ((octave + 2) * 12) + degreeOfScale;            
+            try
+            {
+                OutputDevice outputDevice = OutputDevice.InstalledDevices[device];
+                outputDevice.Open();
+                outputDevice.SendNoteOn(Channel.Channel1, (Note)note, velocity);
+                //outputDevice.SendNoteOff(Channel.Channel1, (Note)note, 0);
+                outputDevice.Close();
+            }
+            catch {
+                MessageBox.Show("An error occurred - check that the Midi port that you are trying to send on is open", "Midi Error");
+            }            
         }
 
         public void sendMidiOff(int octave, int degreeOfScale, int velocity)

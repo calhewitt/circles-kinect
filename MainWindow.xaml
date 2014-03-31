@@ -20,10 +20,7 @@
         <Grid Name="InnerContainer" ClipToBounds="True" Background="#ffffff">
             <Image Height="600" HorizontalAlignment="Left" Margin="0,0,0,0" Name="image1" Stretch="Uniform" VerticalAlignment="Top" Width="800" />
 
-            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True" Grid.RowSpan="2">
-
-
-            </Grid>
+            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True" Grid.RowSpan="2"/>
             <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="68" Margin="545,129,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
             <Ellipse Name="lIndicator" Fill="#3333ff" HorizontalAlignment="Left" Height="68" Margin="299,91,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
             <Grid Name="SelectionPanel" HorizontalAlignment="Left" Height="550" Margin="0,40,0,0" VerticalAlignment="Top" Width="260" Background="#333333" Grid.RowSpan="2">
@@ -31,7 +28,8 @@
                 <Slider Name ="SelectionSize" HorizontalAlignment="Left" Margin="76,63,0,0" VerticalAlignment="Top" Height="20" Width="150" ValueChanged="SelectionSize_ValueChanged"/>
                 <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Visibility="Visible" Margin="10,123,34,403" />
                 <Label Content="Size" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
-                <Label Content="Action" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
+                <Label Content="Actions" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
+                <Button Content="Test Actions" HorizontalAlignment="Left" Margin="151,520,0,0" VerticalAlignment="Top" Width="99" Click="test_actions"/>
 
             </Grid>
             <Grid Name="TopBar" Margin="0,0,0,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="#dddddd" MouseDown="TopBar_MouseDown">

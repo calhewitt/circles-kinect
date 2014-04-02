@@ -9,7 +9,7 @@
         Title="Circles" Height="600" Width="800" MouseMove="window_MouseMove" ResizeMode="NoResize" WindowStyle="none" Icon="{DynamicResource ImageSource1}">
     <Window.Resources>
 
-        <BitmapImage x:Key="ImageSource1" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="D:\Documents\Visual Studio 2013\Projects\Circles\Circles\circlesicon.ico"/>
+        <BitmapImage x:Key="ImageSource1" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://siteoforigin:,,,/circlesicon.ico"/>
 
     </Window.Resources>
     <Grid Name="OuterContainer">

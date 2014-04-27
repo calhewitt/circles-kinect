@@ -20,16 +20,18 @@
         <Grid Name="InnerContainer" ClipToBounds="True" Background="#ffffff">
             <Image Height="600" HorizontalAlignment="Left" Margin="0,0,0,0" Name="image1" Stretch="Uniform" VerticalAlignment="Top" Width="800" />
 
-            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True" Grid.RowSpan="2"/>
+            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True" Grid.RowSpan="2">
+            </Grid>
             <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="68" Margin="545,129,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
             <Ellipse Name="lIndicator" Fill="#3333ff" HorizontalAlignment="Left" Height="68" Margin="299,91,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
-            <Grid Name="SelectionPanel" HorizontalAlignment="Left" Height="550" Margin="0,40,0,0" VerticalAlignment="Top" Width="260" Background="#333333" Grid.RowSpan="2">
+            <Grid Name="SelectionPanel" HorizontalAlignment="Left" Height="550" Margin="0,40,0,0" VerticalAlignment="Top" Width="260" Background="#333333">
                 <Label Name="SelectionName" Content="Selected" HorizontalAlignment="Left" VerticalAlignment="Top" Width="146" FontSize="32" Margin="4,4,0,0" FontFamily="Segoe UI Light" Foreground="#ffffff"/>
                 <Slider Name ="SelectionSize" HorizontalAlignment="Left" Margin="76,63,0,0" VerticalAlignment="Top" Height="20" Width="150" ValueChanged="SelectionSize_ValueChanged"/>
-                <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Visibility="Visible" Margin="10,123,34,403" />
+                <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Visibility="Visible" Margin="10,123,34,221" MaxLines="10"/>
                 <Label Content="Size" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
                 <Label Content="Actions" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
                 <Button Content="Test Actions" HorizontalAlignment="Left" Margin="151,520,0,0" VerticalAlignment="Top" Width="99" Click="test_actions"/>
+                <Button Content="Add Action" HorizontalAlignment="Left" Margin="50,520,0,0" VerticalAlignment="Top" Width="90" Click="add_action_dialog"/>
 
             </Grid>
             <Grid Name="TopBar" Margin="0,0,0,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="#dddddd" MouseDown="TopBar_MouseDown">
@@ -38,13 +40,22 @@
                     <ColumnDefinition Width="777*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="New Circle" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555" Background="Transparent" HorizontalAlignment="Left" Margin="683,52,0,-36" VerticalAlignment="Top" Width="75" MouseDown="newcircle_click" Grid.Column="1" FontSize="16" Padding="0,-12,0,0" Height="24"/>
+                <Label Content="Right Vel" Name="rVelocityMonitor" Margin="677,76,19,-64" Grid.Column="1"/>
+
                 <Label Content="Circles" HorizontalAlignment="Left" Margin="6,-7,0,0" VerticalAlignment="Top" FontSize="30" FontFamily="Segoe UI Light" Grid.ColumnSpan="2"/>
                 <Label Content="x" Foreground="#555555" HorizontalAlignment="Left" Margin="749,2,0,0" VerticalAlignment="Top" Width="17" BorderThickness="0" FontSize="20" FontWeight="Bold" FontFamily="Segoe UI" Padding="0,-8,0,0" Height="32" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" MouseLeftButtonDown="closeButton_click" Grid.Column="1"/>
                 <Label Name="Toggletracking" Content="Start" HorizontalAlignment="Left" Margin="87,7,0,0" VerticalAlignment="Top" Width="39" MouseDown="toggle_tracking" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
                 <Label Name="Save" Content="Save" HorizontalAlignment="Left" Margin="133,7,0,0" VerticalAlignment="Top" Width="38" MouseDown="save_to_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
                 <Label Name="SaveAs" Content="Save As" HorizontalAlignment="Left" Margin="177,7,0,0" VerticalAlignment="Top" Width="58" MouseDown="save_as" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
                 <Label Name="Open" Content="Open File" HorizontalAlignment="Left" Margin="241,7,0,0" VerticalAlignment="Top" Width="71" MouseDown="open_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Content="Left Vel" x:Name="lVelocityMonitor" Margin="677,104,19,-92" Grid.Column="1"/>
 
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="420" Margin="250,90,0,0" VerticalAlignment="Top" Width="300" Name="action_selector" Background="#dddddd">
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="6" Direction="0" RenderingBias="Quality" ShadowDepth="0" Color="#333333"/>
+                </Grid.Effect>
+                <Label Content="x" Foreground="#555555" HorizontalAlignment="Left" Margin="273,10,0,0" VerticalAlignment="Top" Width="17" BorderThickness="0" FontSize="20" FontWeight="Bold" FontFamily="Segoe UI" Padding="0,-8,0,0" Height="32" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" MouseDown="action_selector_close"/>
             </Grid>
         </Grid>
     </Grid>

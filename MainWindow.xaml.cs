@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -37,6 +38,10 @@ namespace Circles
         String[] colors = { "#32ff32", "#ffa500", "#1E90FF", "#CD0000" };
         int counter = 0;
         Dictionary<Ellipse, String> circles;
+        
+        //Velocity
+        double rVelocity;
+        double lVelocity;
 
         // SoundPlayer cache
         Dictionary<String, SoundPlayer> spcache;
@@ -64,6 +69,8 @@ namespace Circles
 
             //Hide the selection panel
             SelectionPanel.Margin = new Thickness(-260, 40, 0, 0);
+
+            action_selector.Visibility = Visibility.Hidden;
 
             circles = new Dictionary<Ellipse, String>();
             end_tracking();
@@ -101,6 +108,7 @@ namespace Circles
                 debugMode();
                 //There are no kinect sensors available, notify the user
             }
+            velocity();
         }
         public void end_tracking()
         {
@@ -229,11 +237,28 @@ namespace Circles
                 panelVisible = false;
             }
         }
+        private void add_action_dialog(object sender, RoutedEventArgs e)
+        {
+            String action = choose_action();
+            if (action != null)
+            {
+                SelectionAction.Text = SelectionAction.Text + action + ";\n";
+            }
+        }
+        public string choose_action()
+        {
+            action_selector.Visibility = Visibility.Visible;
+            return null;
+        }
+        private void action_selector_close(object sender, RoutedEventArgs e)
+        {
+            action_selector.Visibility = Visibility.Hidden;
+        }
         private void test_actions(object sender, RoutedEventArgs e)
         {
             foreach (string command in circles[selected].Split(';'))
             {
-                executeCommand(command);
+                executeCommand(command, new String[] {"127"});
             }   
         }
         private void window_MouseMove(object sender, MouseEventArgs e)
@@ -264,7 +289,7 @@ namespace Circles
             Application.Current.Shutdown();
         }
 
-        //Algorithmto check whether an indicator is inside a circle
+        //Algorithm to check whether an indicator is inside a circle
         public Boolean inCircle(Ellipse circle, Ellipse indicator)
         {
             Point totest = new Point(indicator.Margin.Left + 34, indicator.Margin.Top + 34);
@@ -285,17 +310,20 @@ namespace Circles
                 lIndicator.Margin = new Thickness(lx, ly, 0, 0);
                 newstate = null;
                 newlstate = null;
+                Ellipse activecircle = null;
+                Ellipse lactivecircle = null;
                 foreach (FrameworkElement child in Circles.Children)
                 {
                     Ellipse circle = (Ellipse)child;
                     if (inCircle(circle, Indicator))
                     {
                         newstate = circles[circle];
+                        activecircle = circle;
                     }
                     if (inCircle(circle, lIndicator)) {
                         newlstate = circles[circle];
+                        lactivecircle = circle;
                     }
-
                 }
                 if (state != newstate)
                 {
@@ -305,7 +333,8 @@ namespace Circles
                     {
                         foreach (string command in newstate.Split(';'))
                         {
-                            executeCommand(command);
+                            
+                            executeCommand(command, new String[] {rVelocity.ToString()});
                         }                        
                     }
 
@@ -334,7 +363,7 @@ namespace Circles
                     //A new state has been reached, so an action needs to be triggered
                     if (newlstate != null)
                     {
-                        executeCommand(newlstate);
+                        executeCommand(newlstate, new String[] {lVelocity.ToString()});
                     }
 
                     //If original state is midi, release note  
@@ -373,11 +402,12 @@ namespace Circles
             }
         }
 
-        public void executeCommand(String command)
+        public void executeCommand(String command, String[] commandargs)
         {
             //MessageBox.Show("executing");
             if (command.Contains(":"))
             {
+                command = command.Replace("$VELOCITY", commandargs[0]);
                 String action = command.Split(':')[0].ToLower();
                 String data = command.Split(new char[] { ':' }, 2)[1];
 
@@ -412,7 +442,7 @@ namespace Circles
                         else if (action == "midi")
                         {
                             String[] midiparams = data.Split(',');
-                            sendMidi(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), Convert.ToInt32(midiparams[2]), Convert.ToInt32(midiparams[4]));
+                            sendMidi(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), Convert.ToInt32(Math.Round(Convert.ToDouble(midiparams[2]))), Convert.ToInt32(midiparams[4]));
                         }
                         else if (action == "keypress")
                         {
@@ -477,14 +507,14 @@ namespace Circles
 
         //Function to play midi to output device
         public void sendMidi(int octave, int degreeOfScale, int velocity, int device)
-        {
-            int note = ((octave + 2) * 12) + degreeOfScale;            
+        {            
             try
             {
+                int note = ((octave + 2) * 12) + degreeOfScale;
                 OutputDevice outputDevice = OutputDevice.InstalledDevices[device];
-                outputDevice.Open();
+                if (outputDevice.IsOpen != true) outputDevice.Open();
                 outputDevice.SendNoteOn(Channel.Channel1, (Note)note, velocity);
-                //outputDevice.SendNoteOff(Channel.Channel1, (Note)note, 0);
+                //outputDevice.SendNoteOff(Channel.Channel1, (Note)note, 0);     
                 outputDevice.Close();
             }
             catch {
@@ -723,6 +753,51 @@ namespace Circles
                         gotCoordinates(mousepos.X - 34 , mousepos.Y - 34, 0, 0);
                     }, null);                    
                 } 
+            });
+            bw.RunWorkerAsync();
+        }
+        
+        //Creates a separate thread for tracking velocity
+        public void velocity()
+        {
+            BackgroundWorker bw = new BackgroundWorker();            
+            bw.DoWork += new DoWorkEventHandler(
+            delegate(object o, DoWorkEventArgs args)
+            {
+                Point oldrPos = new Point(0,0);
+                Point oldlPos = new Point(0,0);
+                Application.Current.Dispatcher.Invoke((Action)delegate()
+                    {
+                        oldrPos = new Point(Indicator.Margin.Left, Indicator.Margin.Top);
+                        oldlPos = new Point(lIndicator.Margin.Left, lIndicator.Margin.Top);
+                    });
+                while (tracking)
+                {
+                    System.Threading.Thread.Sleep(60);
+                    Application.Current.Dispatcher.Invoke((Action)delegate()
+                    {
+                        Point rPos = new Point(Indicator.Margin.Left, Indicator.Margin.Top);
+                        Point lPos = new Point(lIndicator.Margin.Left, lIndicator.Margin.Top);
+                        double rxoffset = Math.Abs(rPos.X - oldrPos.X);
+                        double ryoffset = Math.Abs(rPos.Y - oldrPos.Y);
+                        double lxoffset = Math.Abs(lPos.X - oldlPos.X);
+                        double lyoffset = Math.Abs(lPos.Y - oldlPos.Y);
+
+                        double roffset = Math.Sqrt(Math.Pow(rxoffset, 2) + Math.Pow(ryoffset, 2));
+                        double loffset = Math.Sqrt(Math.Pow(lxoffset, 2) + Math.Pow(lyoffset, 2));
+
+                        if (roffset * 2.4 < 128) rVelocity = roffset * 2.4;
+                        else rVelocity = 127;
+                        if (loffset * 2.4 < 128) lVelocity = loffset * 2.4;
+                        else lVelocity = 127;
+
+                        oldrPos = rPos;
+                        oldlPos = lPos;
+
+                        rVelocityMonitor.Content = rVelocity.ToString();
+                        lVelocityMonitor.Content = lVelocity.ToString();
+                    });
+                }
             });
             bw.RunWorkerAsync();
         }

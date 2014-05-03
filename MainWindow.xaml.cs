@@ -43,6 +43,8 @@ namespace Circles
         double rVelocity;
         double lVelocity;
 
+        String defaultMidiPort = "0";
+
         // SoundPlayer cache
         Dictionary<String, SoundPlayer> spcache;
 
@@ -77,8 +79,24 @@ namespace Circles
 
             spcache = new Dictionary<String, SoundPlayer>();
 
+            List<String> midiOptions = new List<String>();
+            int counter = 0;
+            foreach (OutputDevice device in OutputDevice.InstalledDevices) {
+                midiOptions.Add(counter.ToString() + ": " + device.Name);
+                counter++;
+            }
+            
+            port_selector.ItemsSource = midiOptions;
+
             panelVisible = false;
             state = null;
+
+            //Initialise new action dialog
+            List<String> octaveOptions = new List<String>(new string[] {"0","1","2","3","4","5","6","7"});
+            octave_selector.ItemsSource = octaveOptions;
+
+            List<String> degreeOptions = new List<String>(new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"});
+            degree_selector.ItemsSource = degreeOptions;
 
         }
         public void toggle_tracking(object sender, RoutedEventArgs e)
@@ -237,28 +255,49 @@ namespace Circles
                 panelVisible = false;
             }
         }
+        
+        // Action Selector Dialog
         private void add_action_dialog(object sender, RoutedEventArgs e)
         {
-            String action = choose_action();
-            if (action != null)
-            {
-                SelectionAction.Text = SelectionAction.Text + action + ";\n";
-            }
+            choose_action();
         }
-        public string choose_action()
+        public void add_action(String action) 
+        {
+            SelectionAction.Text = SelectionAction.Text + action + ";\n";
+        }
+        public void choose_action()
         {
             action_selector.Visibility = Visibility.Visible;
-            return null;
+            mask.Visibility = Visibility.Visible;
+            octave_selector.SelectedValue = null;
+            degree_selector.SelectedValue = null;
+            velocity_selector.Value = 127;
         }
         private void action_selector_close(object sender, RoutedEventArgs e)
         {
             action_selector.Visibility = Visibility.Hidden;
+            mask.Visibility = Visibility.Hidden;
         }
+        private void action_dialog_ok(object sender, RoutedEventArgs e)
+        {
+            String action = "midi:" + octave_selector.SelectedValue.ToString() + "," + degree_selector.SelectedValue.ToString() + "," + velocity_selector.Value.ToString() + ",false,$DEFAULT_PORT";
+            add_action(action);
+            action_selector_close(null, null);
+        }
+
+
         private void test_actions(object sender, RoutedEventArgs e)
         {
             foreach (string command in circles[selected].Split(';'))
             {
-                executeCommand(command, new String[] {"127"});
+                try
+                {
+                    executeCommand(command, new String[] { "127" });
+                }
+                catch
+                {
+                    MessageBox.Show("You must specify a midi output port");
+                }
             }   
         }
         private void window_MouseMove(object sender, MouseEventArgs e)
@@ -268,7 +307,7 @@ namespace Circles
                 Window wnd = Window.GetWindow(this);
                 Point currentLocation = e.MouseDevice.GetPosition(wnd);
                 Ellipse ellipse = down;
-                ellipse.Margin = new Thickness(currentLocation.X - 50, currentLocation.Y - 50, 0, 0);
+                ellipse.Margin = new Thickness(currentLocation.X - down.Width/2, currentLocation.Y - down.Width/2, 0, 0);
             }
         }
 
@@ -363,7 +402,10 @@ namespace Circles
                     //A new state has been reached, so an action needs to be triggered
                     if (newlstate != null)
                     {
-                        executeCommand(newlstate, new String[] {lVelocity.ToString()});
+                        foreach (string command in newlstate.Split(';'))
+                        {
+                            executeCommand(newlstate, new String[] { lVelocity.ToString() });
+                        }
                     }
 
                     //If original state is midi, release note  
@@ -404,10 +446,19 @@ namespace Circles
 
         public void executeCommand(String command, String[] commandargs)
         {
+            command = command.Trim();
             //MessageBox.Show("executing");
             if (command.Contains(":"))
             {
                 command = command.Replace("$VELOCITY", commandargs[0]);
+                if (port_selector.SelectedItem.ToString().Contains(":"))
+                {
+                    command = command.Replace("$DEFAULT_PORT", port_selector.SelectedItem.ToString().Split(':')[0]);
+                }
+                else
+                {
+                    command = command.Replace("$DEFAULT_PORT", "0");
+                }
                 String action = command.Split(':')[0].ToLower();
                 String data = command.Split(new char[] { ':' }, 2)[1];
 

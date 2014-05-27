@@ -1,0 +1,27 @@
+@font-face {
+    font-family: chunk-five;
+    src: url(font/chunk-five.otf);
+}
+@font-face {
+    font-family: bebas-neue;
+    src: url(font/bebas-neue.ttf);
+}
+
+body {
+    background-color: #eeeeee;      
+}
+* {
+    color: #333333;
+}
+#container {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    margin-left: -400px;
+}
+#title {
+    width: 800px;
+    font-family: chunk-five;
+    font-size: 150px;
+    text-align: center;
+}

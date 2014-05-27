@@ -17,11 +17,30 @@ body {
     position: absolute;
     top: 50px;
     left: 50%;
-    margin-left: -400px;
+    width: 600px;
+    margin-left: -300px;
+    text-align: center;
 }
 #title {
-    width: 800px;
+    width: 600px;
     font-family: chunk-five;
-    font-size: 150px;
+    font-size: 180px;
     text-align: center;
+}
+#subtitle {
+    width: 600px;
+    font-family: chunk-five;
+    font-size: 75px;
+    text-align: center;
+    margin-top: -50px;
+}
+#screenshot {
+    width: 450px;
+    margin-top: 20px;
+}
+#description {
+    width: 600px;
+    font-size: 40px;
+    font-family: bebas-neue;
+    margin-top: 20px;
 }

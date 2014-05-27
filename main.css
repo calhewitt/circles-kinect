@@ -82,6 +82,8 @@ body {
     font-size: 40px;
     margin-top: 20px;
     float: none;
+}
+#github-link a {
     color: #555555;
 }
 .shadow {

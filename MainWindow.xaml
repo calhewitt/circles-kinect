@@ -24,15 +24,15 @@
             </Grid>
             <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="68" Margin="545,129,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
             <Ellipse Name="lIndicator" Fill="#3333ff" HorizontalAlignment="Left" Height="68" Margin="299,91,0,0" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
-            
+
             <Grid Name="SelectionPanel" HorizontalAlignment="Left" Height="550" Margin="0,40,0,0" VerticalAlignment="Top" Width="260" Background="#333333">
                 <Label Name="SelectionName" Content="Selected" HorizontalAlignment="Left" VerticalAlignment="Top" Width="146" FontSize="32" Margin="4,4,0,0" FontFamily="Segoe UI Light" Foreground="#ffffff"/>
                 <Slider Name ="SelectionSize" HorizontalAlignment="Left" Margin="76,63,0,0" VerticalAlignment="Top" Height="20" Width="150" ValueChanged="SelectionSize_ValueChanged"/>
-                <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Visibility="Visible" Margin="10,123,34,221" MaxLines="10" Background="#333333" Foreground="#ffffff" BorderBrush="Transparent"/>
+                <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Visibility="Visible" Margin="10,123,34,221" MaxLines="12" Background="#333333" Foreground="#ffffff" BorderBrush="Transparent"/>
                 <Label Content="Size" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
                 <Label Content="Actions" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
-                <Button Content="Test Actions" HorizontalAlignment="Left" Margin="151,520,0,0" VerticalAlignment="Top" Width="99" Click="test_actions"/>
-                <Button Content="+" HorizontalAlignment="Left" Margin="203,82,0,0" VerticalAlignment="Top" Width="23" Click="add_action_dialog" Background="Transparent" Foreground="#ffffff" BorderBrush="Transparent" FontWeight="bold" FontSize="20pt" Height="33"/>
+                <Label Content="Test Actions" HorizontalAlignment="Left" Margin="166,515,0,0" VerticalAlignment="Top" Width="80" MouseDown="test_actions" Foreground="White"/>
+                <Label Content="+" HorizontalAlignment="Left" Margin="203,78,0,0" VerticalAlignment="Top" Width="32" MouseDown="add_action_dialog" Background="Transparent" Foreground="#ffffff" BorderBrush="Transparent" FontWeight="bold" FontSize="20pt" Height="40"/>
 
             </Grid>
             <Grid Name="TopBar" Margin="0,0,0,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="#dddddd" MouseDown="TopBar_MouseDown">
@@ -67,6 +67,10 @@
                 <Label Content="Octave" HorizontalAlignment="Left" Margin="26,81,0,0" VerticalAlignment="Top"/>
                 <Label Content="Degree Of Scale" HorizontalAlignment="Left" Margin="21,131,0,0" VerticalAlignment="Top"/>
                 <Label Content="Velocity" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,181,0,0"/>
+                <Label Content="MIDI" Foreground="DarkBlue" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="12,47,0,0" VerticalAlignment="Top"/>
+                <Label Content="CMD" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="53,47,0,0" VerticalAlignment="Top" MouseDown="no_gui_yet"/>
+                <Label Content="WEB" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="91,47,0,0" VerticalAlignment="Top" MouseDown="no_gui_yet"/>
+                <Label Content="TTS" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="132,47,0,0" VerticalAlignment="Top" MouseDown="no_gui_yet"/>
             </Grid>
         </Grid>
     </Grid>

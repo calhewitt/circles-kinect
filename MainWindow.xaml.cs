@@ -43,7 +43,6 @@ namespace Circles
         double rVelocity;
         double lVelocity;
 
-        String defaultMidiPort = "0";
 
         // SoundPlayer cache
         Dictionary<String, SoundPlayer> spcache;
@@ -283,6 +282,10 @@ namespace Circles
             String action = "midi:" + octave_selector.SelectedValue.ToString() + "," + degree_selector.SelectedValue.ToString() + "," + velocity_selector.Value.ToString() + ",false,$DEFAULT_PORT";
             add_action(action);
             action_selector_close(null, null);
+        }
+        private void no_gui_yet(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("No GUI Yet! You can still use the text interface though...", "Such Sadness :(");
         }
 
 

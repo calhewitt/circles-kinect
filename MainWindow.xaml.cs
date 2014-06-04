@@ -58,11 +58,13 @@ namespace Circles
         public String state;
         public String lstate;
         public int freq;
-        public string sampledir = "D:\\Documents\\Development\\kinect music\\samples\\";
         public Boolean panelVisible;
         Boolean started = false;
 
         string filename = null;
+
+        BrushConverter brushconverter;
+        String addaction_currenttab = "";
 
         public MainWindow()
         {
@@ -96,6 +98,11 @@ namespace Circles
 
             List<String> degreeOptions = new List<String>(new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"});
             degree_selector.ItemsSource = degreeOptions;
+
+            //Set up brush convertor
+            brushconverter = new BrushConverter();
+
+            addaction_hideAll();
 
         }
         public void toggle_tracking(object sender, RoutedEventArgs e)
@@ -271,6 +278,51 @@ namespace Circles
             octave_selector.SelectedValue = null;
             degree_selector.SelectedValue = null;
             velocity_selector.Value = 127;
+
+            //Default to midi tab
+            addaction_midi.Visibility = Visibility.Visible;
+            label_midi.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
+            addaction_currenttab = "midi";
+        }
+        private void label_midi_click(object sender, RoutedEventArgs e)
+        {
+            addaction_hideAll();
+            addaction_midi.Visibility = Visibility.Visible;
+            label_midi.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
+            addaction_currenttab = "midi";
+        }
+        private void label_cmd_click(object sender, RoutedEventArgs e)
+        {
+            addaction_hideAll();
+            addaction_cmd.Visibility = Visibility.Visible;
+            label_cmd.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
+            addaction_currenttab = "cmd";
+        }
+        private void label_web_click(object sender, RoutedEventArgs e)
+        {
+            addaction_hideAll();
+            addaction_web.Visibility = Visibility.Visible;
+            label_web.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
+            addaction_currenttab = "web";
+        }
+        private void label_tts_click(object sender, RoutedEventArgs e)
+        {
+            addaction_hideAll();
+            addaction_tts.Visibility = Visibility.Visible;
+            label_tts.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
+            addaction_currenttab = "tts";
+        }
+        void addaction_hideAll()
+        {
+            addaction_midi.Visibility = Visibility.Hidden;
+            addaction_cmd.Visibility = Visibility.Hidden;
+            addaction_tts.Visibility = Visibility.Hidden;
+            addaction_web.Visibility = Visibility.Hidden;
+
+            label_midi.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
+            label_cmd.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
+            label_web.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
+            label_tts.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
         }
         private void action_selector_close(object sender, RoutedEventArgs e)
         {
@@ -279,8 +331,26 @@ namespace Circles
         }
         private void action_dialog_ok(object sender, RoutedEventArgs e)
         {
-            String action = "midi:" + octave_selector.SelectedValue.ToString() + "," + degree_selector.SelectedValue.ToString() + "," + velocity_selector.Value.ToString() + ",false,$DEFAULT_PORT";
-            add_action(action);
+            if (addaction_currenttab == "midi")
+            {
+                String action = "midi:" + octave_selector.SelectedValue.ToString() + "," + degree_selector.SelectedValue.ToString() + "," + velocity_selector.Value.ToString() + ",false,$DEFAULT_PORT";
+                add_action(action);
+            }
+            else if (addaction_currenttab == "cmd")
+            {
+                String action = "cmd:" + cmd_command.Text; ;
+                add_action(action);
+            }
+            else if (addaction_currenttab == "tts")
+            {
+                String action = "say:" + text_to_say.Text; ;
+                add_action(action);
+            }
+            else if (addaction_currenttab == "web")
+            {
+                String action = "web:" + web_address.Text; ;
+                add_action(action);
+            }
             action_selector_close(null, null);
         }
         private void no_gui_yet(object sender, RoutedEventArgs e)
@@ -552,6 +622,10 @@ namespace Circles
                         else if (action == "run")
                         {
                             System.Diagnostics.Process.Start(data);
+                        }
+                        else if (action == "cmd")
+                        {
+                            System.Diagnostics.Process.Start("CMD.exe", "/C "+ data);
                         }
                     });
                     bw.RunWorkerAsync();

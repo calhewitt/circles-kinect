@@ -61,16 +61,31 @@
                 <Label Content="x" Foreground="#555555" HorizontalAlignment="Left" Margin="273,10,0,0" VerticalAlignment="Top" Width="17" BorderThickness="0" FontSize="20" FontWeight="Bold" FontFamily="Segoe UI" Padding="0,-8,0,0" Height="32" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" MouseDown="action_selector_close"/>
                 <Button Content="OK" HorizontalAlignment="Left" Margin="215,394,0,0" VerticalAlignment="Top" Width="75" Click="action_dialog_ok"/>
                 <Label Content="Add Action" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" FontSize="20px"/>
-                <ComboBox HorizontalAlignment="Left" Margin="129,81,0,0" VerticalAlignment="Top" Width="120" Name="octave_selector"/>
-                <ComboBox HorizontalAlignment="Left" Margin="129,131,0,0" VerticalAlignment="Top" Width="120" Name="degree_selector"/>
-                <Slider HorizontalAlignment="Left" Margin="129,181,0,0" VerticalAlignment="Top" Width="113" Maximum="127" Minimum="0" Name="velocity_selector"/>
-                <Label Content="Octave" HorizontalAlignment="Left" Margin="26,81,0,0" VerticalAlignment="Top"/>
-                <Label Content="Degree Of Scale" HorizontalAlignment="Left" Margin="21,131,0,0" VerticalAlignment="Top"/>
-                <Label Content="Velocity" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,181,0,0"/>
-                <Label Content="MIDI" Foreground="DarkBlue" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="12,47,0,0" VerticalAlignment="Top"/>
-                <Label Content="CMD" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="53,47,0,0" VerticalAlignment="Top" MouseDown="no_gui_yet"/>
-                <Label Content="WEB" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="91,47,0,0" VerticalAlignment="Top" MouseDown="no_gui_yet"/>
-                <Label Content="TTS" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="132,47,0,0" VerticalAlignment="Top" MouseDown="no_gui_yet"/>
+
+                <Grid Name="addaction_midi" Visibility="hidden">
+                    <Label Content="Octave" HorizontalAlignment="Left" Margin="26,81,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Degree Of Scale" HorizontalAlignment="Left" Margin="21,131,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Velocity" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,181,0,0"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="129,81,0,0" VerticalAlignment="Top" Width="120" Name="octave_selector"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="129,131,0,0" VerticalAlignment="Top" Width="120" Name="degree_selector"/>
+                    <Slider HorizontalAlignment="Left" Margin="129,181,0,0" VerticalAlignment="Top" Width="113" Maximum="127" Minimum="0" Name="velocity_selector"/>
+                </Grid>
+                <Grid Name="addaction_cmd" Visibility="hidden" Margin="36,121,37,262">
+                    <TextBox Name="cmd_command" Margin="-10,-6,-10,16"/>
+                    <Label Content="Command:" HorizontalAlignment="Left" Margin="-10,-37,0,0" VerticalAlignment="Top" Height="26"/>
+                </Grid>
+                <Grid Name="addaction_tts" Margin="36,121,56,276">
+                    <Label Content="Text to Speak:" HorizontalAlignment="Left" Margin="-10,-37,0,0" VerticalAlignment="Top" Height="26"/>
+                    <TextBox Name="text_to_say" Margin="-10,-6,-10,0"/>
+                </Grid>
+                <Grid Name="addaction_web" Margin="36,121,56,276">
+                    <Label Content="Address to Query:" HorizontalAlignment="Left" Margin="-10,-37,0,0" VerticalAlignment="Top" Height="26"/>
+                    <TextBox Name="web_address" Margin="-10,-6,-10,0"/>
+                </Grid>
+                <Label Content="MIDI" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="12,47,0,0" VerticalAlignment="Top" Name="label_midi" MouseDown="label_midi_click"/>
+                <Label Content="CMD" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="53,47,0,0" VerticalAlignment="Top" Name="label_cmd" MouseDown="label_cmd_click"/>
+                <Label Content="WEB" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="91,47,0,0" VerticalAlignment="Top" Name="label_web" MouseDown="label_web_click"/>
+                <Label Content="TTS" Foreground="Black" FontFamily="Segoe UI Bold" HorizontalAlignment="Left" Margin="132,47,0,0" VerticalAlignment="Top" Name="label_tts" MouseDown="label_tts_click"/>
             </Grid>
         </Grid>
     </Grid>

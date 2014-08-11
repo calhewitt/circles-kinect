@@ -64,7 +64,6 @@ namespace Circles
         string filename = null;
 
         BrushConverter brushconverter;
-        String addaction_currenttab = "";
 
         public MainWindow()
         {
@@ -72,8 +71,6 @@ namespace Circles
 
             //Hide the selection panel
             SelectionPanel.Margin = new Thickness(-260, 40, 0, 0);
-
-            action_selector.Visibility = Visibility.Hidden;
 
             circles = new Dictionary<Ellipse, String>();
             end_tracking();
@@ -92,17 +89,11 @@ namespace Circles
             panelVisible = false;
             state = null;
 
-            //Initialise new action dialog
-            List<String> octaveOptions = new List<String>(new string[] {"0","1","2","3","4","5","6","7"});
-            octave_selector.ItemsSource = octaveOptions;
-
-            List<String> degreeOptions = new List<String>(new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"});
-            degree_selector.ItemsSource = degreeOptions;
-
             //Set up brush convertor
             brushconverter = new BrushConverter();
 
-            addaction_hideAll();
+            //Set up combo boxes
+            comboxBoxSetup();
 
         }
         public void toggle_tracking(object sender, RoutedEventArgs e)
@@ -159,10 +150,10 @@ namespace Circles
             circle.MouseUp += circle_Up;
             circle.HorizontalAlignment = HorizontalAlignment.Left;
             circle.VerticalAlignment = VerticalAlignment.Top;
-            circle.Margin = new Thickness(300, 200, 0, 0);
             circle.Cursor = Cursors.SizeAll;
             circle.Name = "CIRCLE" + counter.ToString();
-            circles.Add(circle, "");
+            circle.Margin = new Thickness(300, 300, 0, 0);
+            circles.Add(circle, "midi:C0,127,$DEFAULT_PORT");
             Circles.Children.Add(circle);
             counter++;
         }
@@ -191,15 +182,21 @@ namespace Circles
             showSelectionPanel();
             //SelectionName.Content = selected.Name;
             SelectionSize.Value = (selected.Width - 50) / 20;
-            SelectionAction.Text = circles[selected];
 
-
-            String action = SelectionAction.Text.Split(':')[0].ToLower();
+            String actionValue = circles[selected];
+            String action = actionValue.Split(':')[0].ToLower();
             String data = "";
             if (SelectionAction.Text.Contains(":"))
             {
-                data = SelectionAction.Text.Split(new char[] { ':' }, 2)[1];
+                data = actionValue.Split(new char[] { ':' }, 2)[1];
             }
+
+            //if the circle has a simple midi action, use the GUI selector
+            string[] midiParams = data.Split(',');
+            n1selector.SelectedValue = midiParams[0];
+            VelocitySelector.Value = Convert.ToInt32(midiParams[1]);
+
+            SelectionAction.Text = actionValue;
         }
         private void selectionAction_textChanged(object sender, RoutedEventArgs e)
         {
@@ -216,7 +213,28 @@ namespace Circles
             selected.Height = (slider.Value * 20) + 50;
             //MessageBox.Show(slider.Value.ToString());
         }
-
+        private void updateAction(object sender, RoutedEventArgs e)
+        {
+            SelectionAction.Text = "midi:" + n1selector.SelectedValue.ToString() + "," + VelocitySelector.Value.ToString() + ",$DEFAULT_PORT";
+        }
+        public void comboxBoxSetup()
+        {
+            for (int i = 0; i <= 7; i++)
+            {
+                n1selector.Items.Add("C" + i.ToString());
+                n1selector.Items.Add("C#" + i.ToString());
+                n1selector.Items.Add("D" + i.ToString());
+                n1selector.Items.Add("D#" + i.ToString());
+                n1selector.Items.Add("E" + i.ToString());
+                n1selector.Items.Add("F" + i.ToString());
+                n1selector.Items.Add("F#" + i.ToString());
+                n1selector.Items.Add("G" + i.ToString());
+                n1selector.Items.Add("G#" + i.ToString());
+                n1selector.Items.Add("A" + i.ToString());
+                n1selector.Items.Add("A#" + i.ToString());
+                n1selector.Items.Add("B" + i.ToString());
+            }
+        }
         private void container_down(object sender, MouseEventArgs e)
         {
             destroy_selection();
@@ -261,103 +279,6 @@ namespace Circles
                 panelVisible = false;
             }
         }
-        
-        // Action Selector Dialog
-        private void add_action_dialog(object sender, RoutedEventArgs e)
-        {
-            choose_action();
-        }
-        public void add_action(String action) 
-        {
-            SelectionAction.Text = SelectionAction.Text + action + ";\n";
-        }
-        public void choose_action()
-        {
-            action_selector.Visibility = Visibility.Visible;
-            mask.Visibility = Visibility.Visible;
-            octave_selector.SelectedValue = null;
-            degree_selector.SelectedValue = null;
-            velocity_selector.Value = 127;
-
-            //Default to midi tab
-            addaction_midi.Visibility = Visibility.Visible;
-            label_midi.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
-            addaction_currenttab = "midi";
-        }
-        private void label_midi_click(object sender, RoutedEventArgs e)
-        {
-            addaction_hideAll();
-            addaction_midi.Visibility = Visibility.Visible;
-            label_midi.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
-            addaction_currenttab = "midi";
-        }
-        private void label_cmd_click(object sender, RoutedEventArgs e)
-        {
-            addaction_hideAll();
-            addaction_cmd.Visibility = Visibility.Visible;
-            label_cmd.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
-            addaction_currenttab = "cmd";
-        }
-        private void label_web_click(object sender, RoutedEventArgs e)
-        {
-            addaction_hideAll();
-            addaction_web.Visibility = Visibility.Visible;
-            label_web.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
-            addaction_currenttab = "web";
-        }
-        private void label_tts_click(object sender, RoutedEventArgs e)
-        {
-            addaction_hideAll();
-            addaction_tts.Visibility = Visibility.Visible;
-            label_tts.Foreground = (Brush)brushconverter.ConvertFromString("#003F87");
-            addaction_currenttab = "tts";
-        }
-        void addaction_hideAll()
-        {
-            addaction_midi.Visibility = Visibility.Hidden;
-            addaction_cmd.Visibility = Visibility.Hidden;
-            addaction_tts.Visibility = Visibility.Hidden;
-            addaction_web.Visibility = Visibility.Hidden;
-
-            label_midi.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
-            label_cmd.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
-            label_web.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
-            label_tts.Foreground = (Brush)brushconverter.ConvertFromString("#000000");
-        }
-        private void action_selector_close(object sender, RoutedEventArgs e)
-        {
-            action_selector.Visibility = Visibility.Hidden;
-            mask.Visibility = Visibility.Hidden;
-        }
-        private void action_dialog_ok(object sender, RoutedEventArgs e)
-        {
-            if (addaction_currenttab == "midi")
-            {
-                String action = "midi:" + octave_selector.SelectedValue.ToString() + "," + degree_selector.SelectedValue.ToString() + "," + velocity_selector.Value.ToString() + ",false,$DEFAULT_PORT";
-                add_action(action);
-            }
-            else if (addaction_currenttab == "cmd")
-            {
-                String action = "cmd:" + cmd_command.Text; ;
-                add_action(action);
-            }
-            else if (addaction_currenttab == "tts")
-            {
-                String action = "say:" + text_to_say.Text; ;
-                add_action(action);
-            }
-            else if (addaction_currenttab == "web")
-            {
-                String action = "web:" + web_address.Text; ;
-                add_action(action);
-            }
-            action_selector_close(null, null);
-        }
-        private void no_gui_yet(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("No GUI Yet! You can still use the text interface though...", "Such Sadness :(");
-        }
-
 
         private void test_actions(object sender, RoutedEventArgs e)
         {
@@ -380,7 +301,7 @@ namespace Circles
                 Window wnd = Window.GetWindow(this);
                 Point currentLocation = e.MouseDevice.GetPosition(wnd);
                 Ellipse ellipse = down;
-                ellipse.Margin = new Thickness(currentLocation.X - down.Width/2, currentLocation.Y - down.Width/2, 0, 0);
+                ellipse.Margin = new Thickness(currentLocation.X - down.Width / 2, currentLocation.Y - down.Width / 2, 0, 0);
             }
         }
 
@@ -404,7 +325,7 @@ namespace Circles
         //Algorithm to check whether an indicator is inside a circle
         public Boolean inCircle(Ellipse circle, Ellipse indicator)
         {
-            Point totest = new Point(indicator.Margin.Left + 34, indicator.Margin.Top + 34);
+            Point totest = new Point(Canvas.GetLeft(indicator) + 34, Canvas.GetTop(indicator) + 34);
             Point circleCenter = new Point(circle.Margin.Left + (circle.Width / 2), circle.Margin.Top + (circle.Width / 2));
             double a = Math.Abs(totest.X - circleCenter.X);
             double b = Math.Abs(totest.Y - circleCenter.Y);
@@ -418,8 +339,10 @@ namespace Circles
         {
             if (tracking)
             {
-                Indicator.Margin = new Thickness(rx, ry, 0, 0);
-                lIndicator.Margin = new Thickness(lx, ly, 0, 0);
+                Canvas.SetLeft(Indicator, rx);
+                Canvas.SetTop(Indicator, ry);
+                Canvas.SetLeft(lIndicator, lx);
+                Canvas.SetTop(lIndicator, ly);
                 newstate = null;
                 newlstate = null;
                 Ellipse activecircle = null;
@@ -449,22 +372,6 @@ namespace Circles
                             executeCommand(command, new String[] {rVelocity.ToString()});
                         }                        
                     }
-
-                    //If original state is midi, release note  
-                    if (state != null)
-                    {
-                        String action = state.Split(':')[0].ToLower();
-                        String data = state.Split(new char[] { ':' }, 2)[1];
-                        if (action == "midi")
-                        {
-                            //MessageBox.Show("midi off");
-                            String[] midiparams = data.Split(',');
-                            if (midiparams[3] == "true")
-                            {
-                                sendMidiOff(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), 0);
-                            }
-                        }
-                    }
                 }
                 state = newstate;
                 
@@ -478,22 +385,6 @@ namespace Circles
                         foreach (string command in newlstate.Split(';'))
                         {
                             executeCommand(newlstate, new String[] { lVelocity.ToString() });
-                        }
-                    }
-
-                    //If original state is midi, release note  
-                    if (lstate != null)
-                    {
-                        String action = lstate.Split(':')[0].ToLower();
-                        String data = lstate.Split(new char[] { ':' }, 2)[1];
-                        if (action == "midi")
-                        {
-                            //MessageBox.Show("midi off");
-                            String[] midiparams = data.Split(',');
-                            if (midiparams[3] == "true")
-                            {
-                                sendMidiOff(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), 0);
-                            }
                         }
                     }
                 }
@@ -540,92 +431,11 @@ namespace Circles
                     BackgroundWorker bw = new BackgroundWorker();
                     bw.DoWork += new DoWorkEventHandler(
                     delegate(object o, DoWorkEventArgs args)
-                    {
-                        if (action == "play")
-                        {
-                            try
-                            {
-                                if (spcache.ContainsKey(data))
-                                {
-                                    spcache[data].Stop();
-                                    spcache[data].Play();
-                                    //MessageBox.Show("Sound file loaded from cache");
-                                }
-                                else
-                                {
-                                    SoundPlayer sound = new SoundPlayer(data);
-                                    spcache.Add(data, sound);
-                                    sound.Play();
-                                }
-                            }
-                            catch (FileNotFoundException)
-                            {
-                                MessageBox.Show("the file cannot be found");
-                            }
-                        }
-                        else if (action == "midi")
+                    {                        
+                        if (action == "midi")
                         {
                             String[] midiparams = data.Split(',');
-                            sendMidi(Convert.ToInt32(midiparams[0]), Convert.ToInt32(midiparams[1]), Convert.ToInt32(Math.Round(Convert.ToDouble(midiparams[2]))), Convert.ToInt32(midiparams[4]));
-                        }
-                        else if (action == "keypress")
-                        {
-                            VirtualKeyCode key;
-                            switch (data)
-                            {
-                                case "right":
-                                    key = VirtualKeyCode.RIGHT;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                case "left":
-                                    key = VirtualKeyCode.LEFT;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                case "up":
-                                    key = VirtualKeyCode.UP;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                case "down":
-                                    key = VirtualKeyCode.DOWN;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                case "space":
-                                    key = VirtualKeyCode.SPACE;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                case "back":
-                                    key = VirtualKeyCode.BACK;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                case "enter":
-                                    key = VirtualKeyCode.RETURN;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                case "play":
-                                    key = VirtualKeyCode.MEDIA_PLAY_PAUSE;
-                                    InputSimulator.SimulateKeyPress(key);
-                                    break;
-                                default:
-                                    InputSimulator.SimulateTextEntry(data);
-                                    break;
-                            }
-                        }
-                        else if (action == "webrequest")
-                        {
-                            new StreamReader(WebRequest.Create(data).GetResponse().GetResponseStream()).ReadToEnd();
-                        }
-                        else if (action == "say")
-                        {
-                            SpeechSynthesizer ss = new SpeechSynthesizer();
-                            ss.Speak(data);
-                        }
-                        else if (action == "run")
-                        {
-                            System.Diagnostics.Process.Start(data);
-                        }
-                        else if (action == "cmd")
-                        {
-                            System.Diagnostics.Process.Start("CMD.exe", "/C "+ data);
+                            sendMidi(midiparams[0], Convert.ToInt32(Math.Round(Convert.ToDouble(midiparams[1]))), Convert.ToInt32(midiparams[2]));
                         }
                     });
                     bw.RunWorkerAsync();
@@ -634,10 +444,39 @@ namespace Circles
         }
 
         //Function to play midi to output device
-        public void sendMidi(int octave, int degreeOfScale, int velocity, int device)
+        public void sendMidi(String notename, int velocity, int device)
         {            
             try
             {
+                int octave, degreeOfScale;
+                //parse note name
+                Dictionary<string, int> notes = new Dictionary<string, int>()
+                {
+                    {"C", 0},
+                    {"C#", 1},
+                    {"D", 2},
+                    {"D#", 3},
+                    {"E", 4},
+                    {"F", 5},
+                    {"F#", 6},
+                    {"G", 7},
+                    {"G#", 8},
+                    {"A", 9},
+                    {"A#", 10},
+                    {"B", 11},
+                };
+                notename = notename.ToUpper();
+                octave = 0;
+                if (notename[1] == '#')
+                {
+                    degreeOfScale = notes[notename.Substring(0, 2)];
+                    octave = Convert.ToInt32(notename.Substring(2));
+                }
+                else
+                {
+                    degreeOfScale = notes[notename[0].ToString()];
+                    octave = Convert.ToInt32(notename.Substring(1));
+                }
                 int note = ((octave + 2) * 12) + degreeOfScale;
                 OutputDevice outputDevice = OutputDevice.InstalledDevices[device];
                 if (outputDevice.IsOpen != true) outputDevice.Open();
@@ -648,15 +487,6 @@ namespace Circles
             catch {
                 MessageBox.Show("An error occurred - check that the Midi port that you are trying to send on is open", "Midi Error");
             }            
-        }
-
-        public void sendMidiOff(int octave, int degreeOfScale, int velocity)
-        {
-            int note = ((octave + 2) * 12) + degreeOfScale;
-            OutputDevice outputDevice = OutputDevice.InstalledDevices[1];
-            outputDevice.Open();
-            outputDevice.SendNoteOff(Channel.Channel1, (Note)note, velocity);
-            outputDevice.Close();
         }
 
         private void save_to_file(object sender, RoutedEventArgs e)
@@ -896,16 +726,16 @@ namespace Circles
                 Point oldlPos = new Point(0,0);
                 Application.Current.Dispatcher.Invoke((Action)delegate()
                     {
-                        oldrPos = new Point(Indicator.Margin.Left, Indicator.Margin.Top);
-                        oldlPos = new Point(lIndicator.Margin.Left, lIndicator.Margin.Top);
+                        oldrPos = new Point(Canvas.GetLeft(Indicator), Canvas.GetTop(Indicator));
+                        oldlPos = new Point(Canvas.GetLeft(lIndicator), Canvas.GetTop(lIndicator));
                     });
                 while (tracking)
                 {
                     System.Threading.Thread.Sleep(60);
                     Application.Current.Dispatcher.Invoke((Action)delegate()
                     {
-                        Point rPos = new Point(Indicator.Margin.Left, Indicator.Margin.Top);
-                        Point lPos = new Point(lIndicator.Margin.Left, lIndicator.Margin.Top);
+                        Point rPos = new Point(Canvas.GetLeft(Indicator), Canvas.GetTop(Indicator));
+                        Point lPos = new Point(Canvas.GetLeft(lIndicator), Canvas.GetTop(lIndicator));
                         double rxoffset = Math.Abs(rPos.X - oldrPos.X);
                         double ryoffset = Math.Abs(rPos.Y - oldrPos.Y);
                         double lxoffset = Math.Abs(lPos.X - oldlPos.X);
@@ -929,5 +759,6 @@ namespace Circles
             });
             bw.RunWorkerAsync();
         }
+
     }
 }

@@ -22,8 +22,8 @@
 
             <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True"/>
             <Canvas>
-                <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="68" Canvas.Top="236" Canvas.Left="357" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
-                <Ellipse Name="lIndicator" Fill="#3333ff" HorizontalAlignment="Left" Height="68" Canvas.Top="236" Canvas.Left="545" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
+                <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="48" Canvas.Top="236" Canvas.Left="357" StrokeThickness="6" Stroke="Black" VerticalAlignment="Top" Width="48"/>
+                <Ellipse Name="lIndicator" Fill="#3333ff" HorizontalAlignment="Left" Height="48" Canvas.Top="236" Canvas.Left="545" StrokeThickness="6" Stroke="Black" VerticalAlignment="Top" Width="48"/>
             </Canvas>
             <Grid Name="SelectionPanel" HorizontalAlignment="Left" Height="550" Margin="0,40,0,0" VerticalAlignment="Top" Width="260" Background="#333333">
                 <Label Name="SelectionName" Content="Selected" HorizontalAlignment="Left" VerticalAlignment="Top" Width="146" FontSize="32" Margin="4,4,0,0" FontFamily="Segoe UI Light" Foreground="#ffffff"/>

@@ -339,7 +339,7 @@ namespace Circles
         //Algorithm to check whether an indicator is inside a circle
         public Boolean inCircle(Ellipse circle, Ellipse indicator)
         {
-            Point totest = new Point(Canvas.GetLeft(indicator) + 34, Canvas.GetTop(indicator) + 34);
+            Point totest = new Point(Canvas.GetLeft(indicator) + 24, Canvas.GetTop(indicator) + 24);
             Point circleCenter = new Point(circle.Margin.Left + (circle.Width / 2), circle.Margin.Top + (circle.Width / 2));
             double a = Math.Abs(totest.X - circleCenter.X);
             double b = Math.Abs(totest.Y - circleCenter.Y);
@@ -728,7 +728,7 @@ namespace Circles
                         Application.Current.Dispatcher.Invoke((Action)delegate()
                         {
                             Point mousepos = Mouse.GetPosition(Application.Current.MainWindow);
-                            gotCoordinates(mousepos.X - 34, mousepos.Y - 34, 0, 0);
+                            gotCoordinates(mousepos.X - 24, mousepos.Y - 24, 0, 0);
                         }, null);
                     }
                 });

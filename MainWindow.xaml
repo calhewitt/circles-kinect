@@ -20,8 +20,7 @@
         <Grid Name="InnerContainer" ClipToBounds="True" Background="#ffffff">
             <Image Height="600" HorizontalAlignment="Left" Margin="0,0,0,0" Name="image1" Stretch="Uniform" VerticalAlignment="Top" Width="800" />
 
-            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True" Grid.RowSpan="2">
-            </Grid>
+            <Grid Name="Circles" MouseDown="container_down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" ClipToBounds="True"/>
             <Canvas>
                 <Ellipse Name="Indicator" Fill="#333333" HorizontalAlignment="Left" Height="68" Canvas.Top="236" Canvas.Left="357" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
                 <Ellipse Name="lIndicator" Fill="#3333ff" HorizontalAlignment="Left" Height="68" Canvas.Top="236" Canvas.Left="545" StrokeThickness="10" Stroke="Black" VerticalAlignment="Top" Width="68"/>
@@ -30,7 +29,7 @@
                 <Label Name="SelectionName" Content="Selected" HorizontalAlignment="Left" VerticalAlignment="Top" Width="146" FontSize="32" Margin="4,4,0,0" FontFamily="Segoe UI Light" Foreground="#ffffff"/>
                 <Slider Name ="SelectionSize" HorizontalAlignment="Left" Margin="76,63,0,0" VerticalAlignment="Top" Height="20" Width="150" ValueChanged="SelectionSize_ValueChanged"/>
 
-                <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Visibility="Visible" Margin="19,392,25,79" MaxLines="12" Background="#333333" Foreground="#ffffff" BorderBrush="Transparent"/>
+                <TextBox Name="SelectionAction" TextChanged="selectionAction_textChanged" Margin="19,392,25,79" MaxLines="12" Background="#333333" Foreground="#ffffff" BorderBrush="Transparent" Visibility="Hidden"/>
                 <ComboBox HorizontalAlignment="Left" Margin="88,124,0,0" VerticalAlignment="Top" Width="138" Name="n1selector" SelectionChanged="updateAction" SelectedValue="C0"/>
 
                 <Label Content="Size" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Light" Foreground="#ffffff" FontSize="15"/>
@@ -46,17 +45,25 @@
                     <ColumnDefinition Width="13*"/>
                     <ColumnDefinition Width="777*"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="New Circle" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555" Background="Transparent" HorizontalAlignment="Left" Margin="683,52,0,-36" VerticalAlignment="Top" Width="75" MouseDown="newcircle_click" Grid.Column="1" FontSize="16" Padding="0,-12,0,0" Height="24"/>
-                <Label Content="Right Vel" Name="rVelocityMonitor" Margin="677,76,19,-64" Grid.Column="1"/>
-                <ComboBox HorizontalAlignment="Left" Margin="638,137,0,-121" VerticalAlignment="Top" Width="120" Name="port_selector" Grid.Column="1" Height="24" RenderTransformOrigin="0.5,0.5"/>
+                <Label Content="Right Vel" Name="rVelocityMonitor" Margin="677,76,19,-64" Grid.Column="1" Visibility="Hidden"/>
+                <Grid HorizontalAlignment="Left" Height="56" Margin="648,65,0,-81" VerticalAlignment="Top" Width="98" Background="#dddddd" Grid.Column="1">
+                    <ComboBox HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="58" x:Name="port_selector" Height="36" RenderTransformOrigin="0.26,-0.042" Visibility="Hidden"/>
+                    <Button Margin="10,10,49,10" Click="midi_selector_click" BorderBrush="Transparent">
+                        <Image Source="settings.png" Height="26" Width="22"></Image>
+                    </Button>
+                    <Button Margin="52,10,8,10" Click="newcircle_click" BorderBrush="Transparent">
+                        <Image Source="plus.png" Height="26" Width="20"></Image>
+                    </Button>
+                </Grid>
 
                 <Label Content="circles" HorizontalAlignment="Left" Margin="7,-3,0,-3" VerticalAlignment="Top" FontSize="30" FontFamily="ChunkFive" Grid.ColumnSpan="2" Foreground="#333333"/>
                 <Label Content="x" Foreground="#555555" HorizontalAlignment="Left" Margin="749,2,0,0" VerticalAlignment="Top" Width="17" BorderThickness="0" FontSize="20" FontWeight="Bold" FontFamily="Segoe UI" Padding="0,-8,0,0" Height="32" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" MouseLeftButtonDown="closeButton_click" Grid.Column="1"/>
-                <Label Name="Toggletracking" Content="Start" HorizontalAlignment="Left" Margin="105,6,0,0" VerticalAlignment="Top" Width="39" MouseDown="toggle_tracking" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
-                <Label Name="Save" Content="Save" HorizontalAlignment="Left" Margin="151,6,0,0" VerticalAlignment="Top" Width="38" MouseDown="save_to_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
-                <Label Name="SaveAs" Content="Save As" HorizontalAlignment="Left" Margin="195,6,0,0" VerticalAlignment="Top" Width="58" MouseDown="save_as" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
-                <Label Name="Open" Content="Open File" HorizontalAlignment="Left" Margin="259,6,0,0" VerticalAlignment="Top" Width="71" MouseDown="open_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
-                <Label Content="Left Vel" x:Name="lVelocityMonitor" Margin="677,104,19,-92" Grid.Column="1"/>
+                <Label Name="Toggletracking" Content="Start" HorizontalAlignment="Left" Margin="147,6,0,0" VerticalAlignment="Top" Width="39" MouseDown="toggle_tracking" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Name="Save" Content="Save" HorizontalAlignment="Left" Margin="193,6,0,0" VerticalAlignment="Top" Width="38" MouseDown="save_to_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Name="SaveAs" Content="Save As" HorizontalAlignment="Left" Margin="237,6,0,0" VerticalAlignment="Top" Width="58" MouseDown="save_as" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Name="Open" Content="Open File" HorizontalAlignment="Left" Margin="301,6,0,0" VerticalAlignment="Top" Width="71" MouseDown="open_file" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
+                <Label Content="Left Vel" x:Name="lVelocityMonitor" Margin="677,104,19,-92" Grid.Column="1" Visibility="Hidden"/>
+                <Label x:Name="New" Content="New" HorizontalAlignment="Left" Margin="104,6,0,0" VerticalAlignment="Top" Width="39" MouseDown="blank" BorderThickness="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="14" MouseEnter="closeButton_mouseEnter" MouseLeave="closeButton_mouseLeave" Foreground="#555555"/>
 
             </Grid>
             <Grid Name="mask" Width="800" Height="600" Background="Transparent" Visibility="Hidden"/>

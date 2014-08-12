@@ -65,6 +65,8 @@ namespace Circles
 
         BrushConverter brushconverter;
 
+        Boolean DEBUGMODE = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -95,6 +97,17 @@ namespace Circles
             //Set up combo boxes
             comboxBoxSetup();
 
+            if (DEBUGMODE)
+            {
+                SelectionAction.Visibility = Visibility.Visible;
+                rVelocityMonitor.Visibility = Visibility.Visible;
+                lVelocityMonitor.Visibility = Visibility.Visible;
+            }
+
+        }
+        private void midi_selector_click(object sender, RoutedEventArgs e)
+        {
+            port_selector.IsDropDownOpen = true;
         }
         public void toggle_tracking(object sender, RoutedEventArgs e)
         {
@@ -190,12 +203,13 @@ namespace Circles
             {
                 data = actionValue.Split(new char[] { ':' }, 2)[1];
             }
-
-            //if the circle has a simple midi action, use the GUI selector
-            string[] midiParams = data.Split(',');
-            n1selector.SelectedValue = midiParams[0];
-            VelocitySelector.Value = Convert.ToInt32(midiParams[1]);
-
+            if (action == "midi")
+            {
+                //if the circle has a simple midi action, use the GUI selector
+                string[] midiParams = data.Split(',');
+                n1selector.SelectedValue = midiParams[0];
+                VelocitySelector.Value = Convert.ToInt32(midiParams[1]);
+            }
             SelectionAction.Text = actionValue;
         }
         private void selectionAction_textChanged(object sender, RoutedEventArgs e)
@@ -393,6 +407,10 @@ namespace Circles
         }
 
         //Remove all circles from the canvas
+        private void blank(object sender, RoutedEventArgs e)
+        {
+            blank_canvas();
+        }
         public void blank_canvas()
         {
             List<FrameworkElement> elementslist = new List<FrameworkElement>();
@@ -697,22 +715,30 @@ namespace Circles
         }
         public void debugMode()
         {
-            MessageBox.Show("Debug mode started");
-            BackgroundWorker bw = new BackgroundWorker();            
-            bw.DoWork += new DoWorkEventHandler(
-            delegate(object o, DoWorkEventArgs args)
+            if (DEBUGMODE)
             {
-                
-                while (tracking == true)
+                MessageBox.Show("Debug mode started");
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(
+                delegate(object o, DoWorkEventArgs args)
                 {
-                    Application.Current.Dispatcher.Invoke((Action)delegate()
+
+                    while (tracking == true)
                     {
-                        Point mousepos = Mouse.GetPosition(Application.Current.MainWindow);
-                        gotCoordinates(mousepos.X - 34 , mousepos.Y - 34, 0, 0);
-                    }, null);                    
-                } 
-            });
-            bw.RunWorkerAsync();
+                        Application.Current.Dispatcher.Invoke((Action)delegate()
+                        {
+                            Point mousepos = Mouse.GetPosition(Application.Current.MainWindow);
+                            gotCoordinates(mousepos.X - 34, mousepos.Y - 34, 0, 0);
+                        }, null);
+                    }
+                });
+                bw.RunWorkerAsync();
+            }
+            else
+            {
+                end_tracking();
+                MessageBox.Show("You must connect a Kinect sensor", "No Kinect found!");
+            }
         }
         
         //Creates a separate thread for tracking velocity
